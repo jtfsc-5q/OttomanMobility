@@ -2,7 +2,7 @@
 ## Idea
 Reading Ottoman text is cumbersome. And some historical sources
 includes valuable information about the mobility of the Ottoman public officials.
-This project aims to extract the mobility information from an Ottoman legal journal
+This project aims to extract the mobility information from an 19th century Ottoman legal journal
 called _Ceride-i Mehakim_.
 The mobility information covers the following:
 - The name of the official
@@ -26,7 +26,7 @@ from the text. The extracted information will be saved in a sqlite DB.
 ## Features
 - End-to-End Latinization of printed Ottoman texts.
 - Extracting structured mobility information from the latinized text.
-- Automatic location name suggestion/correction based on an excel list of names.
+- Automatic location name suggestion/correction based on an excel list of location names.
 - Storing the information in a sqlite DB.
 
 ![Extraction in Action](./images/in_action.png)
