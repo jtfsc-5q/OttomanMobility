@@ -26,7 +26,7 @@ from the text. The extracted information will be saved in a sqlite DB.
 ## Features
 - End-to-End Latinization of printed Ottoman texts.
 - Extracting structured mobility information from the latinized text.
-- Automatic location name suggestion/correction based on an excel list of location names.
+- Automatic location name suggestion/correction based on an excel list of location names (`./data/ottoman_locations.xlsx`).
 - Storing the information in a sqlite DB.
 
 ![Extraction in Action](./images/in_action.png)
