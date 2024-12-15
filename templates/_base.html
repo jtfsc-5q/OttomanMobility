@@ -1,0 +1,165 @@
+<!-- templates/_base.html -->
+
+{% load compress %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ottoman Mobility Analyzer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="{% static 'js/init.js' %}"></script>
+    <script src="{% static 'js/util.js' %}"></script>
+    <script src="{% static 'js/tableUpdate.js' %}"></script>
+
+    {% compress css %}
+    {% endcompress %}
+</head>
+
+<body class="bg-green-50">
+    <nav class="bg-white border-gray-200 dark:bg-gray-900">
+      <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+          <a href="#" class="flex items-center space-x-3 rtl:space-x-reverse">
+              <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Ottoman Mobility Analyzer</span>
+          </a>
+      </div>
+    </nav>
+
+    <div class="container mx-auto" style="max-width: 2400px;">
+        {% block content %}
+        {% endblock content %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.1/dist/flowbite.min.js"></script>
+    <script>
+        const spinners = document.querySelectorAll('.spinner');
+        const saveMessageContainer = document.getElementById('db-message-container');
+
+        //Called upon user selecting/pasting an image.
+        async function handleFileUpload(file) {
+
+            if (!file.type.includes('image/png')) {
+                alert('Please upload a PNG file');
+                return;
+            }
+
+            if (file) {
+                try {
+                    spinners.forEach(spinner => spinner.classList.remove('hidden'));
+                    document.getElementById('ocr_text_info').innerText = "Loading...";
+                    document.getElementById('latinized_text_info').innerText = "Loading...";
+
+                    const formData = new FormData();
+                    formData.append('file', file);
+
+                    // Send the image for processing
+                    const response = await fetch('{% url "ocr_and_latinize_image" %}', {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-CSRFToken': '{{ csrf_token }}',
+                        },
+                    });
+
+                    const data = await response.json();
+                    renderOCRAndLatinizedText(data.OCR, data.Latinized);
+                } catch(error) {
+                    console.error('Error:', error);
+                }
+            }
+        }
+        // Called upon click on Extract button
+        async function extractAppointmentDataFromText(latinized_text) {
+            try {
+                const response = await fetch('{% url "extract_appointment_data" %}', {
+                    method: 'POST',
+                    body: JSON.stringify({ text: latinized_text }),
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}',
+                    },
+                });
+
+                const data = await response.json();
+                const locationSuggestions = [];
+
+                //Get suggestions for each location
+                for (const appointment of data.appointments) {
+                    const [suggestionsForFromCity, suggestionsForToCity] = await Promise.all([
+                        findLocationSuggestions(appointment.fromCity),
+                        findLocationSuggestions(appointment.toCity)
+                    ]);
+                    locationSuggestions.push([suggestionsForFromCity, suggestionsForToCity]);
+                }
+
+                await updateTable(data.appointments, locationSuggestions);
+            } catch (error) {
+                console.error('Error extracting appointment data:', error);
+            }
+        }
+
+        // Upon extraction, each location will be passed
+        // into this function to find suggestions
+        async function findLocationSuggestions(raw_location_name) {
+            try {
+                const response = await fetch('{% url "find_location_suggestions" %}', {
+                    method: 'POST',
+                    body: JSON.stringify({ location_name: raw_location_name }),
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}',
+                    },
+                });
+
+                return await response.json();
+
+            } catch (error) {
+                console.error('Error finding location suggestions:', error);
+                return [];
+            }
+        }
+
+        // Event listener for the saving the extracted appointments.
+        document.getElementById('appointments-form').addEventListener('submit', async function (event) {
+            event.preventDefault();  // Prevent default form submission
+            try {
+                // Get the CSRF token
+                const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+                // Collect the appointments data from the table
+                const appointments = collectAppointDataFromTable();
+
+                // Send the data via fetch
+                const response = await fetch('{% url "save_appointments" %}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrftoken
+                    },
+                    body: JSON.stringify({appointments: appointments})
+                });
+
+                if (!response.ok) {
+                    throw await response.json();
+                }
+                await response.json();
+                saveMessageContainer.className = 'fixed top-4 right-4 p-4 rounded-lg bg-green-50 text-green-800 shadow-lg';
+                saveMessageContainer.textContent = "Saved successfully!";
+            } catch (error) {
+                saveMessageContainer.className = 'fixed top-4 right-4 p-4 rounded-lg bg-red-50 text-red-800 shadow-lg';
+                saveMessageContainer.textContent = "Error saving data!";
+            }
+
+            //Make message banner visible and hide after 5 seconds.
+            saveMessageContainer.style.display = 'block';
+            setTimeout(() => {
+                saveMessageContainer.style.display = 'none';
+            }, 5000);
+        })
+
+    </script>
+</body>
+</html>

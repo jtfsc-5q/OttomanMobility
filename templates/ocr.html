@@ -1,0 +1,106 @@
+{% extends "_base.html" %}
+
+{% block content %}
+<div class=" mx-auto px-5 mt-10 ">
+    <label for="is_conseq">Consecutive Analysis? </label><input type="checkbox" id="is_conseq" class="mr-2 mb-5">
+
+  <div class="flex justify-between">
+      <!-- Card 1 -->
+    <div class="bg-white rounded-lg shadow-md p-4" style="width: calc(30% - 5px);">
+      <h2 class="text-lg font-bold mb-2">Source</h2>
+        <div id="image_preview"><p class="text-gray-700 text-sm leading-relaxed">
+            <div class="w-128 pl-1 pt-1">
+                <!-- File Drop Zone (single column) -->
+                <div class="w-full p-1">
+                    <label for="dropzone-file" class="flex flex-col items-center justify-center w-full h-36 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
+                        <div class="flex flex-col items-center justify-center p-6 pt-8">
+                            <svg class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
+                            </svg>
+                            <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">Click to upload</span> or drag and drop a <b>.png</b> file</p>
+                            <p id="file_info" class="text-xs text-gray-500 dark:text-gray-400"></p>
+                            <input id="dropzone-file" type="file" class="mt-32 ml-32 absolute inset-0 w-48 h-48 opacity-0 cursor-pointer" />
+                        </div>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Card 2 -->
+    <div class="bg-white rounded-lg shadow-md p-4" style="width: calc(30% - 5px);">
+      <h2 class="text-lg font-bold mb-2">OCR</h2>
+        <div id="ocr_text_info" class="text-gray-700 text-xs leading-relaxed"></div>
+        <div class="spinner flex justify-center items-center mt-4 hidden">
+            <div role="status">
+                <svg aria-hidden="true" class="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
+                    <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
+                </svg>
+            </div>
+        </div>
+        <div id="ocr_text" class><p class="text-gray-700 text-sm leading-relaxed"></p></div>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="bg-white rounded-lg shadow-md p-4" style="width: calc(40% - 5px);">
+      <h2 class="text-lg font-bold mb-2">Latinization</h2>
+        <div id="latinized_text_info" class="text-gray-700 text-xs leading-relaxed"></div>
+        <div class="spinner flex justify-center items-center mt-4 hidden">
+            <div role="status">
+                <svg aria-hidden="true" class="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
+                    <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
+                </svg>
+            </div>
+        </div>
+        <div id="latinized_text" contenteditable="true" class="text-gray-700 text-sm leading-relaxed"></div>
+        <button id="extract_data" class="bg-blue-500 hover:bg-blue-700 text-white font-bold mt-5 py-2 px-4 rounded hidden">Extract</button>
+    </div>
+</div>
+
+<div class="mt-10 mb-20 max-w-full bg-white border border-gray-200 rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-700">
+    <div class="flex">
+        <!-- Metadata Input Fields and Buttons -->
+        <div class="p-4" style="width: 100%">
+               <form id="appointments-form" method="post">
+                   {% csrf_token %}
+
+                    <!-- Table container -->
+                    <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+                        <!-- Table starts here -->
+                    <table class="w-full text-sm text-left text-gray-700 dark:text-gray-400">
+                        <thead class="text-xs text-gray-700 uppercase bg-gray-200 dark:bg-gray-700 dark:text-gray-400">
+                            <tr>
+                                <!-- Table Headers -->
+                                <th scope="col" class="px-6 py-3 w-1/12">Name</th>
+                                <th scope="col" class="px-6 py-3 w-1/12">From City</th>
+                                <th scope="col" class="px-6 py-3 w-1/12">F. City Sugg.</th>
+                                <th scope="col" class="px-6 py-3 w-1/12">To City</th>
+                                <th scope="col" class="px-6 py-3 w-1/12">To. City Sugg.</th>
+                                <th scope="col" class="px-6 py-3 w-1/4">From Title</th>
+                                <th scope="col" class="px-6 py-3 w-1/4">To Title</th>
+                                <th scope="col" class="px-6 py-3 w-1/12">Education</th>
+                                <th scope="col" class="px-2 py-3 w-1/32">Salary</th>
+                                <th scope="col" class="px-2 py-3 w-1/12">Source</th>
+                                <th scope="col" class="px-2 py-3 w-1/32">Source Date</th>
+                                <th scope="col" class="px-6 py-3 w-1/12">Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody id="appointments-table-body">
+                            <!-- Rows will be inserted here -->
+                        </tbody>
+                    </table>
+                    </div>
+                    <!-- Save to DB button -->
+                    <div class="mt-4">
+                        <button id="save_to_db" type="submit" class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2">
+                            Save to DB
+                        </button>
+                        <div id="db-message-container" class="alert" style="display: none;"></div>
+                    </div>
+               </form>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
