@@ -25,10 +25,10 @@ function renderOCRAndLatinizedText(ocr, latinized) {
 
     if (document.getElementById('is_conseq').checked) {
         document.getElementById('ocr_text').innerHTML += `<p class="text-gray-700 text-lg">${ocr.replace(/\n/g, '<br>')}</p>`;
-        document.getElementById('latinized_text').innerHTML += `<p class="text-gray-700 text-sm leading-relaxed">${latinized.replace(/\n/g, '<br>')}</p>`;
+        document.getElementById('latinized_text').innerHTML += `<p class="text-gray-700 text-sm leading-relaxed">${latinized.replace(/\\n/g, '<br>')}</p>`;
     } else {
         document.getElementById('ocr_text').innerHTML = `<p class="text-gray-700 text-lg">${ocr.replace(/\n/g, '<br>')}</p>`;
-        document.getElementById('latinized_text').innerHTML = `<p class="text-gray-700 text-sm leading-relaxed">${latinized.replace(/\n/g, '<br>')}</p>`;
+        document.getElementById('latinized_text').innerHTML = `<p class="text-gray-700 text-sm leading-relaxed">${latinized.replace(/\\n/g, '<br>')}</p>`;
     }
 
     document.getElementById('extract_data').classList.remove('hidden');
