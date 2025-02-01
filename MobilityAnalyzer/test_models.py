@@ -4,6 +4,8 @@ from MobilityAnalyzer.models import MovementItem
 
 
 class MovementItemTestCase(TestCase):
+    
+    # Simple example mobility information.
     def setUp(self):
         MovementItem.objects.create(
             name="Person Name1234",
@@ -18,6 +20,7 @@ class MovementItemTestCase(TestCase):
             notes="Some Notes here!"
         )
 
+
     def test_movement_item_str(self):
         movement_item = MovementItem.objects.get(name="Person Name1234")
         self.assertEqual(movement_item.name, "Person Name1234")
@@ -26,7 +29,6 @@ class MovementItemTestCase(TestCase):
         movement_item = MovementItem.objects.get(name="Person Name1234")
         self.assertIsInstance(movement_item.date, datetime.date,
                               "Date field should be a date object.")
-        # Date field should be a string, not a date object.
 
     def test_default_notes(self):
         empty_notes = MovementItem.objects.create(

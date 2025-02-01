@@ -26,21 +26,21 @@ from the text. The extracted information will be saved in a sqlite DB.
 ## Features
 - End-to-End Latinization of printed Ottoman texts.
 - Extracting structured mobility information from the latinized text.
-- Automatic location name suggestion/correction based on an excel list of location names.
+- Automatic location name suggestion/correction based on an excel list of location names (`./data/ottoman_locations.xlsx`).
 - Storing the information in a sqlite DB.
 
 ![Extraction in Action](./images/in_action.png)
 
 ## Pre-requisites
 - Django 5.1.2
-- Google Cloud account with Document AI API enabled
+- Google Cloud account with Cloud Document AI API enabled and a Document AI processor within it.
 - Claude.AI API access
 
 ## Installation
 -Setting up the .env file:
 * An example.env file is provided. You can copy it to .env and fill the necessary fields.
 * You will need have a Document AI processor in your Google Cloud account and enable it.
-* You will fill `PROCESSOR_ID`, `PROJECT_ID`, and `LOCATION` using the values from Google Cloud.
+* You will fill `PROCESSOR_ID`, `PROJECT_ID`, and `LOCATION` using the values from Google Cloud and Document AI processor you created.
 * You also need to create a service account and download the key file (`GOOGLE_CLOUD_KEY_PATH`).
 * You will also need to have an API Key (`CLAUDE_KEY`) from Claude.AI.
 
