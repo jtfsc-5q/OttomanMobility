@@ -70,3 +70,9 @@ Test cases can be extended by adding more test cases to the test files (`/tests/
 
 To run the tests:
 `pytest`
+
+## Preliminary Results
+I used the tool to extract roughly 725 appointments between 1901-1903 then visualized the data in the following way:
+![results](https://github.com/user-attachments/assets/291c1d91-94b9-41c7-8d4a-5fff6b5ed14c)
+
+
